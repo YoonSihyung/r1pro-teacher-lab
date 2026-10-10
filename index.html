@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="hil.css"></head>
 <body>
 <header class="top"><a class="brand" href="#intro"><span class="mark">R1</span> TEACHER LAB</a><span class="top-note">BEHAVIOR-1K / 연구 가이드</span><a href="#sources" class="sources-link">근거 보기</a></header><div class="historical-plan"><strong>최신 계획: R1Pro + HIL-SERL</strong><p>지정 저장소의 2026 데이터·BEHAVIOR 3.9.3 기준으로 계획을 갱신했습니다. <a href="hil.html">사람 개입을 포함한 전체 학습 그림 보기 →</a></p><p>이 페이지의 이전 PPO·2025 데이터 설명은 당시의 비교안입니다. 최신 실행 기준과 학습 순서는 HIL 페이지를 따릅니다.</p></div>
-<main>
+<main><section style="padding:20px 24px;margin:0 0 24px;background:#fff1df;border:1px solid #efcfac;border-radius:8px;font-size:16px;line-height:1.7"><strong>2026-10-10 · 구현 후의 실행 순서</strong><p style="margin:8px 0 0">현재 환경 확인부터 handoff 검증, pick/place teacher와 HIL, student 학습까지 다음 할 일을 정리했습니다. <a href="next.html">다음 실행 순서 보기</a></p></section>
 <section id="intro" class="intro">
 <div><p class="eyebrow">PRIVILEGED STATE → TEACHER → STUDENT</p><h1>pick과 place_on,<br><span>teacher부터 이해하기.</span></h1><p class="lead">다섯 태스크의 skill 구간을 묶어 두 정책을 학습합니다.<br>현재 teacher 계획은 상태 기반 Gaussian actor와 SAC/RLPD + 사람 교정입니다.</p></div>
 <div class="scope"><span class="pill">학습 범위</span><strong>5 tasks · 2 policies</strong><p>halve_an_egg · store_honey · cook_broccolini<br>make_rose_centerpieces · picking_up_trash</p><div class="policy-pills"><span>π<sub>pick</sub></span><span>π<sub>place_on</sub></span></div><p class="small">전체 태스크 완주가 아닌 pick·place_on skill 학습입니다. 태스크마다 정책을 하나씩 만드는 구성과 다릅니다.</p></div>

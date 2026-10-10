@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>R1Pro · 이제 무엇을 실행할까?</title>
+<meta name="description" content="구현된 R1Pro pick/place_on framework의 다음 실행 순서. 환경 준비, handoff 검증, SAC/HIL teacher, visual student, DAgger와 평가.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231b2433'/%3E%3Cpath d='M8 9h16M8 16h10M8 23h16' stroke='%23ffb56b' stroke-width='3'/%3E%3C/svg%3E">
+<style>
+:root{color-scheme:light;--ink:#1b2433;--muted:#536277;--line:#dce2e9;--paper:#f4f6f9;--blue:#215bb8;--orange:#a44a08;--orange-bg:#fff1df;--green:#11654c;--green-bg:#e9f5ef}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font:1rem/1.7 system-ui,-apple-system,"Noto Sans KR",sans-serif}a{color:var(--blue);text-underline-offset:4px}button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #df8a26;outline-offset:4px}header{background:white;border-bottom:1px solid var(--line)}.header-inner{max-width:1280px;margin:auto;padding:18px 28px;display:flex;justify-content:space-between;align-items:center;gap:20px}.brand{font-size:1rem;font-weight:750;color:var(--ink);text-decoration:none}.header-links{display:flex;flex-wrap:wrap;gap:20px;font-size:.875rem}main{max-width:1280px;margin:auto;padding:28px}h1{font-size:clamp(1.6rem,3vw,2.25rem);line-height:1.35;letter-spacing:-.035em;margin:0 0 12px}h2{font-size:1.5rem;line-height:1.4;letter-spacing:-.025em;margin:0 0 14px}h3{font-size:1.075rem;margin:20px 0 8px}p{margin:0 0 14px}.date{font-size:.875rem;color:var(--muted);margin-bottom:8px}.lead{max-width:900px;color:var(--muted)}.status{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.chip{font-size:.875rem;padding:5px 12px;border:1px solid var(--line);border-radius:6px;background:white}.chip.done{color:var(--green);background:var(--green-bg);border-color:#bcdccd}.chip.pending{color:var(--orange);background:var(--orange-bg);border-color:#efcfac}.now{background:var(--ink);color:white;padding:20px 24px;border-radius:8px;margin-bottom:24px}.now strong{display:block;font-size:1.075rem;margin-bottom:6px}.now p{color:#d6e1ef;margin:0}.roadmap{background:white;border:1px solid var(--line);padding:18px;border-radius:8px;margin-bottom:24px}.roadmap-label{font-size:.875rem;color:var(--muted);margin-bottom:12px}.track{display:grid;grid-template-columns:repeat(8,1fr);gap:10px}.stage{background:#f6f8fb;border:1px solid var(--line);border-radius:6px;padding:12px 9px;text-align:left;color:var(--ink);min-height:86px;position:relative}.stage span{display:block;font-size:.875rem;color:var(--muted);margin-bottom:5px}.stage b{font-size:.95rem}.stage[aria-pressed=true]{background:var(--orange-bg);border-color:#c77327;box-shadow:inset 0 3px #c77327}.stage:not(:last-child):after{content:'›';position:absolute;right:-10px;top:27px;z-index:1;color:#77869c;font-size:1.4rem;background:white}.work{display:grid;grid-template-columns:1fr 300px;gap:22px;align-items:start}.step{background:white;border:1px solid var(--line);border-radius:8px;padding:26px;margin-bottom:20px;scroll-margin-top:20px}.step-number{font-size:.875rem;color:var(--orange);font-weight:650;display:block;margin-bottom:10px}.step .summary{color:var(--muted)}.step ol,.step ul{padding-left:24px;margin:12px 0 18px}.step li{margin:8px 0}.box{background:#f5f7fa;border:1px solid var(--line);padding:16px 18px;border-radius:6px;margin:18px 0}.box strong{display:block;margin-bottom:6px}.box p:last-child{margin-bottom:0}.box.gate{background:var(--green-bg);border-color:#bcdccd}.box.attention{background:var(--orange-bg);border-color:#efcfac}.box .small{font-size:.875rem;color:var(--muted)}.code-wrap{position:relative;background:#172333;border-radius:6px;margin:12px 0 20px;overflow:hidden}.code-wrap pre{margin:0;padding:20px;padding-top:48px;overflow:auto;color:#eef3fa;font: .875rem/1.8 ui-monospace,SFMono-Regular,Consolas,monospace;tab-size:2}.copy{position:absolute;right:10px;top:8px;color:#dbe5f1;background:#2c3e54;border:1px solid #5b6f89;border-radius:4px;font-size:.875rem;padding:3px 10px}.file{font-family:ui-monospace,monospace;font-size:.9rem;overflow-wrap:anywhere}.mini{display:flex;flex-wrap:wrap;align-items:stretch;gap:10px;margin:16px 0}.mini div{flex:1;min-width:145px;border:1px solid var(--line);border-radius:6px;padding:12px;font-size:.95rem}.mini div b{display:block}.mini .oracle{background:#fff1df}.mini .sensor{background:#e9f2ff}.branch{display:grid;grid-template-columns:1fr 1fr;gap:12px}.branch>div{border:1px solid var(--line);border-radius:6px;padding:16px}.branch h3{margin-top:0}.table-scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.95rem;margin:12px 0}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:.875rem;color:var(--muted);background:#f7f9fb}.aside{background:white;border:1px solid var(--line);border-radius:8px;padding:20px}.aside h2{font-size:1.1rem}.aside p{font-size:.95rem}.aside .file{font-size:.875rem}.aside ul{padding-left:20px}.aside li{margin:10px 0;font-size:.95rem}.aside details{margin-top:18px}.aside summary{cursor:pointer;font-size:.95rem;font-weight:650}.tag{font-size:.875rem;color:var(--muted)}.pager{display:flex;justify-content:space-between;gap:14px;margin-top:24px;padding-top:18px;border-top:1px solid var(--line)}.pager button{background:white;border:1px solid #9eb0c8;border-radius:5px;padding:8px 14px;color:var(--ink)}.pager button:disabled{cursor:default;opacity:.4}.pager .next{background:var(--ink);color:white;border-color:var(--ink)}.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}.number-big{font-size:1.6rem;font-weight:750;display:block}.sources{font-size:.875rem;color:var(--muted);margin-top:18px}footer{max-width:1280px;margin:0 auto;padding:0 28px 30px;font-size:.875rem;color:var(--muted)}[hidden]{display:none!important}@media(max-width:1050px){.track{grid-template-columns:repeat(4,1fr)}.stage:nth-child(4):after{content:none}.work{grid-template-columns:1fr}.aside{order:2}}@media(max-width:620px){main{padding:18px 14px}.header-inner{padding:16px 14px;align-items:flex-start;flex-direction:column;gap:8px}.header-links{gap:14px}.track{grid-template-columns:repeat(2,1fr)}.stage:nth-child(even):after{content:none}.step{padding:20px 16px}.branch,.two{grid-template-columns:1fr}.roadmap{padding:12px}.now{padding:18px}.pager button{font-size:.875rem;padding:8px 10px}footer{padding-left:14px;padding-right:14px}}@media print{body{background:white}.track,.copy,.pager{display:none}.work{display:block}.step{display:block!important;break-inside:avoid}.aside{margin-top:20px}}
+</style>
+</head>
+<body>
+<header><div class="header-inner"><a class="brand" href="index.html">R1Pro · Teacher Lab</a><nav class="header-links" aria-label="관련 설명"><a href="design.html">파일별 구조</a><a href="student-framework.html">Teacher / Student 설계</a><a href="hil.html">HIL 설계</a></nav></div></header>
+<main>
+<p class="date">2026-10-10 · 현재 코드와 환경을 기준으로 정리</p>
+<h1>이제 할 일: 먼저 실제 환경에서<br>코드 정렬이 되는지 확인하기.</h1>
+<p class="lead">학습 코드는 구현돼 있습니다. 다음은 환경과 데이터를 준비하고, 작은 실험에서 시작 조건을 검증하는 일입니다. 그 뒤 pick teacher → place teacher → visual student 순서로 진행합니다.</p>
+<div class="status" aria-label="현재 진행 상태"><span class="chip done">코드·핵심 테스트 구현 완료</span><span class="chip pending">시뮬레이터·데이터 준비 필요</span><span class="chip">실제 physics 학습·성공률 미측정</span></div>
+<div class="now"><strong>지금 바로 할 첫 작업</strong><p>Python 3.11의 BEHAVIOR 환경을 준비하고 원본 데이터 경로를 연결하세요. 현재 검증 환경은 Python 3.13이며 OmniGibson·Isaac Sim·transformers·원본 metadata가 없습니다.</p></div>
+<section class="roadmap" aria-label="전체 진행 순서"><p class="roadmap-label">단계를 눌러 할 일 · 실행 명령 · 다음 단계로 넘어갈 조건을 확인하세요.</p><nav class="track" aria-label="단계 선택">
+<button class="stage" data-step="0" aria-pressed="true" aria-controls="step-0"><span>01 · 현재 할 일</span><b>환경 준비</b></button>
+<button class="stage" data-step="1" aria-pressed="false" aria-controls="step-1"><span>02</span><b>데이터 확인</b></button>
+<button class="stage" data-step="2" aria-pressed="false" aria-controls="step-2"><span>03</span><b>시작 상태 검증</b></button>
+<button class="stage" data-step="3" aria-pressed="false" aria-controls="step-3"><span>04</span><b>Pick + HIL</b></button>
+<button class="stage" data-step="4" aria-pressed="false" aria-controls="step-4"><span>05</span><b>Place + HIL</b></button>
+<button class="stage" data-step="5" aria-pressed="false" aria-controls="step-5"><span>06</span><b>5개 태스크로 확장</b></button>
+<button class="stage" data-step="6" aria-pressed="false" aria-controls="step-6"><span>07</span><b>Student 학습</b></button>
+<button class="stage" data-step="7" aria-pressed="false" aria-controls="step-7"><span>08</span><b>무개입 평가</b></button>
+</nav></section>
+<div class="work"><div id="steps">
+<article class="step" id="step-0"><span class="step-number">01 / ENVIRONMENT</span><h2>시뮬레이터와 R1Pro를 먼저 준비합니다.</h2><p class="summary">Teacher 학습에는 실제 물리 step과 reward가 필요합니다. 지금까지 통과한 테스트는 알고리즘·데이터 계약 검증이며, 실제 장면에서의 조작 성능 검증은 남아 있습니다.</p>
+<div class="table-scroll"><table><thead><tr><th>항목</th><th>현재 확인</th><th>필요한 준비</th></tr></thead><tbody><tr><td>Python</td><td>3.13.13</td><td>Isaac Sim 5.1용 Python 3.11 환경</td></tr><tr><td>OmniGibson / Isaac Sim</td><td>설치되지 않음</td><td>BEHAVIOR v3.9.3 / Isaac Sim 5.1</td></tr><tr><td>GPU</td><td>RTX 3090 · CUDA 사용 가능</td><td>실제 학습 서버에서도 호환 환경 확인</td></tr><tr><td>Perception</td><td>transformers 없음</td><td>기존 detector 의존성·모델 cache 준비</td></tr><tr><td>원본 데이터</td><td>설정 경로에 없음</td><td>metadata·HDF5·Parquet·annotation 확보</td></tr></tbody></table></div>
+<h3>할 일</h3><ol><li><a href="https://behavior.stanford.edu/getting_started/installation.html" target="_blank" rel="noopener">BEHAVIOR 공식 설치 안내</a>를 따라 v3.9.3 환경, 장면·객체·R1Pro assets를 준비합니다. Dataset과 원본 demonstration은 별도의 자료입니다.</li><li>학습 코드가 있는 <span class="file">/home/yoonsihyung/workspace/behavior-1k</span>에서 설치한 Python 3.11 환경을 활성화합니다.</li><li><span class="file">requirements-extras.txt</span>와 기존 detector 설정을 확인해 perception 의존성과 가중치를 준비합니다. 설치 후 아래 명령으로 다시 확인합니다.</li></ol>
+<div class="code-wrap"><button class="copy" type="button">복사</button><pre><code>cd /home/yoonsihyung/workspace/behavior-1k
+# 먼저 설치한 Python 3.11 환경을 활성화합니다.
+python -m bench.sim.learning.run check-env</code></pre></div>
+<div class="box attention"><strong>기존 setup.sh는 R1Pro 학습의 완성된 설치 명령이 아닙니다.</strong><p>원본 스크립트에는 RB-Y1 기준 처리와 예전 BEHAVIOR commit이 남아 있습니다. 이번 환경은 공식 v3.9.3 기준으로 맞추고, 저장소의 <span class="file">bench/platform/patches/README.md</span>에 적힌 Isaac/warp 호환 사항도 확인해야 합니다.</p></div>
+<div class="box gate"><strong>다음 단계로 넘어갈 조건</strong><p>버전이 맞는 환경에서 R1Pro 장면을 로드하고 RGB-D와 관절 상태를 읽을 수 있어야 합니다. <span class="file">check-env</span> 통과는 패키지·데이터 경로의 기본 검사이며 실제 렌더링 성공까지 보장하지 않습니다. 데이터 경로 검사는 다음 단계와 함께 해결합니다.</p></div>
+<p class="sources">설치 근거: <a href="https://behavior.stanford.edu/getting_started/installation.html">BEHAVIOR 설치</a> · <a href="https://docs.isaacsim.omniverse.nvidia.com/5.1.0/installation/install_python.html">Isaac Sim 5.1 / Python 3.11</a> · <a href="https://behavior.stanford.edu/challenge/evaluation.html">R1Pro와 v3.9.3 평가 기준</a></p></article>
+
+<article class="step" id="step-1"><span class="step-number">02 / DATA</span><h2>원본 데이터의 위치와 skill 후보를 확인합니다.</h2><p class="summary">이미 있는 label을 재사용합니다. Label은 구간 후보를 지정하고, 실제로 학습 가능한 시작 상태인지는 다음 단계에서 확인합니다.</p>
+<h3>수정할 파일은 config.yaml 하나입니다.</h3><p class="file">bench/sim/learning/config.yaml</p><div class="code-wrap"><button class="copy" type="button">복사</button><pre><code>data:
+  demos_root: /data/agentic-behavior-1k/data/demos_git
+  raw_root: /data/agentic-behavior-1k/data/raw_oracle_campaign
+  cache: outputs/local_skills/data/sources</code></pre></div><p>위 두 절대 경로는 현재 기본값입니다. 실제 원본 데이터가 있는 경로로 바꿉니다. <span class="file">demos_root</span>에는 <span class="file">meta/tasks.jsonl</span>과 episode metadata가 있어야 합니다.</p>
+<div class="mini" aria-label="데이터 준비 흐름"><div><b>기존 label</b>pick / place_on 구간</div><div><b>원본 기록</b>HDF5 + Parquet + annotation</div><div><b>data.py</b>시간 정렬 · 행동 확인</div><div><b>후보 index</b>demo_index.json</div></div>
+<h3>처음에는 각 split에서 한 instance만 읽습니다.</h3><div class="code-wrap"><button class="copy" type="button">복사</button><pre><code>python -m bench.sim.learning.run check-env
+python -m bench.sim.learning.run prepare-data \
+  --instances 0,160,180 --output outputs/local_skills/pilot</code></pre></div><p>기본 분할은 train 0–159 / validation 160–179 / test 180–199입니다. 이 명령은 다섯 태스크에서 각각 세 instance를 읽습니다. 이어지는 첫 물리 실험은 <b>cook_broccolini</b>로 좁힙니다.</p>
+<div class="box"><strong>--download의 범위</strong><p>Metadata가 이미 있을 때 부족한 원본 episode를 내려받는 옵션입니다. 원본 metadata와 시뮬레이터 assets를 한 번에 설치하는 옵션은 아닙니다.</p></div>
+<div class="box gate"><strong>다음 단계로 넘어갈 조건</strong><p><span class="file">outputs/local_skills/pilot/data/demo_index.json</span>이 생성되고, 객체·사용 팔·구간·split이 원본 기록과 맞아야 합니다. 제외된 후보와 이유도 검토합니다.</p></div></article>
+
+<article class="step" id="step-2"><span class="step-number">03 / HANDOFF</span><h2>학습 전에 코드가 만드는 시작 상태를 검증합니다.</h2><p class="summary">Policy가 잘 배우려면 실제 배포와 같은 코드 정렬을 거친 상태에서 시작해야 합니다. 이 단계에서는 모델 성능보다 센서·정렬·controller 연결을 먼저 확인합니다.</p>
+<div class="mini" aria-label="정렬과 제어권 전환"><div class="sensor"><b>센서 추정</b>목표 위치 · 로봇 상태</div><div><b>코드 정렬</b>base + torso + 선택 팔</div><div><b>READY 검사</b>거리 · 속도 · 관측 품질</div><div><b>상태 저장</b>물리·controller·관측 이력</div></div>
+<div class="two"><div class="box"><span class="number-big">12cm</span><b>추정 목표 위치 위의 TCP 시작 목표</b><p>Pick은 물체, place_on은 지지면을 기준으로 합니다. 손가락 끝과 물체 표면의 실제 간격을 직접 맞추는 값은 아닙니다.</p></div><div class="box"><span class="number-big">5cm</span><b>시작 목표 주변의 거리 허용 범위</b><p>감속·관측 조건까지 5프레임 연속 만족하면 제어를 넘깁니다. 모델은 남은 관측 오차를 보정합니다.</p></div></div>
+<div class="code-wrap"><button class="copy" type="button">복사</button><pre><code>python -m bench.sim.learning.run collect-handoffs \
+  --task cook_broccolini --output outputs/local_skills/pilot</code></pre></div>
+<h3>영상과 결과에서 확인할 것</h3><ul><li>목표 물체와 손의 추정 위치가 같은 좌표계인지, TCP/FK가 일치하는지 확인합니다.</li><li>베이스·몸통·팔이 충돌 없이 준비 위치에 도달하고 감속하는지 확인합니다.</li><li>Place 후보에서 물체가 실제로 잡혀 있는지 확인합니다. 원본 assisted-grasp 제약을 풀면서 떨어진 후보는 거절될 수 있습니다.</li><li><span class="file">data/handoffs/index.json</span>의 accepted/rejected 기록을 봅니다. 모든 후보를 억지로 통과시키지 않습니다.</li></ul>
+<div class="box attention"><strong>12cm와 5cm는 아직 물리 rollout으로 검증하지 않은 초기값입니다.</strong><p>거리·속도·관측 조건을 바꾸면 새 runtime 규격으로 handoff를 다시 수집합니다. 기존 bank와 checkpoint는 runtime hash로 연결돼 있으므로 새 <span class="file">--output</span> 실험 경로를 사용합니다.</p></div>
+<div class="box gate"><strong>다음 단계로 넘어갈 조건</strong><p>Pick의 train/validation 시작 상태를 안정적으로 만들고, 준비 실패 이유를 설명할 수 있어야 합니다. 현재 guard는 근거리 TCP/depth 기반이며 완전한 전신 collision planner는 아닙니다.</p></div></article>
+
+<article class="step" id="step-3"><span class="step-number">04 / PICK TEACHER</span><h2>Pick teacher를 학습하고 첫 rollout부터 HIL을 켭니다.</h2><p class="summary">Teacher는 Gaussian SAC/RLPD 계열 정책입니다. 관절·센서 특징에 privileged 정보를 더해 학습하지만, 코드 정렬과 실행 gate는 센서 정보만 사용합니다.</p>
+<div class="mini" aria-label="Teacher 학습 루프"><div class="oracle"><b>Teacher</b>privileged 상태 → 제안 행동</div><div><b>사람 개입</b>필요할 때 행동 교체</div><div><b>공통 실행기</b>제한 후 실제 행동 전송</div><div><b>Replay → SAC</b>실제 행동을 저장·학습</div></div>
+<div class="branch"><div><h3>A. 검증된 BC 데이터가 있으면</h3><p>원본 행동을 현재 팔 제어 규격으로 변환하고 물리 성공을 확인한 replay로 actor를 먼저 초기화합니다.</p><div class="code-wrap"><button class="copy" type="button">복사</button><pre><code>python -m bench.sim.learning.run collect-demonstrations \
+  --skill pick --output outputs/local_skills/pilot
+python -m bench.sim.learning.run train-teacher \
+  --skill pick --output outputs/local_skills/pilot \
+  --offline-replay outputs/local_skills/pilot/data/pick_offline_replay.pt \
+  --steps 5000 --human-port 8766</code></pre></div></div><div><h3>B. 원본 BC 구간이 통과하지 못하면</h3><p>BC를 생략하고 랜덤 초기화에서 RL + 사람 교정으로 시작합니다. HIL은 별도 선행 알고리즘이 아니라 online RL에 붙는 개입 방식입니다.</p><div class="code-wrap"><button class="copy" type="button">복사</button><pre><code>python -m bench.sim.learning.run train-teacher \
+  --skill pick --output outputs/local_skills/pilot \
+  --steps 5000 --human-port 8766</code></pre></div></div></div>
+<div class="box"><strong>사람 개입 화면: http://127.0.0.1:8766</strong><p>학습 프로세스와 같은 PC에서 엽니다. 카메라를 보고 선택 팔 7개 관절과 그리퍼를 조절하며, 버튼 또는 Space를 누르는 동안 개입합니다. Remote 서버라면 SSH port forwarding으로 로컬에 연결합니다. 팔 policy는 base·torso·반대 팔을 고정합니다.</p><p class="small">5000 step은 연결·학습 업데이트를 확인하는 짧은 실험 예시입니다. 수렴이나 성공률을 보장하는 학습량이 아닙니다.</p></div>
+<h3>사람 없이 validation을 평가합니다.</h3><div class="code-wrap"><button class="copy" type="button">복사</button><pre><code>python -m bench.sim.learning.run evaluate \
+  --skill pick --task cook_broccolini --split validation \
+  --episodes 20 --output outputs/local_skills/pilot
+# 이어서 학습하려면 기존 checkpoint를 재개합니다.
+python -m bench.sim.learning.run train-teacher \
+  --skill pick --output outputs/local_skills/pilot \
+  --resume --steps 5000 --human-port 8766</code></pre></div>
+<div class="box gate"><strong>다음 단계로 넘어갈 조건</strong><p>사람 도움 없이 잡기·들기·후퇴를 완료하고, 최종 상태에서 실제로 물체를 유지해야 합니다. Reward 증가만 보지 말고 무개입 성공률·개입 횟수·센서 오판을 함께 확인합니다. Pilot validation 한 instance는 연결 확인용이며 일반화 검증으로는 부족합니다.</p></div></article>
+
+<article class="step" id="step-4"><span class="step-number">05 / PLACE TEACHER</span><h2>학습한 pick으로 잡은 뒤 place teacher를 시작합니다.</h2><p class="summary">Place는 물체가 손에 있어야 시작할 수 있습니다. 그래서 먼저 pick을 확인하고, 실제로 잡힌 상태를 place의 reset 데이터로 연결합니다.</p>
+<div class="mini" aria-label="물리적 place 시작 상태 만들기"><div><b>Pick teacher 실행</b>잡기 · 들기 · 후퇴</div><div><b>Place 코드 정렬</b>지지면 근처 준비</div><div><b>Place handoff 저장</b>실제 파지 + 센서 이력</div><div class="oracle"><b>Place teacher + HIL</b>내리기 · 해제 · 안정화</div></div>
+<div class="code-wrap"><button class="copy" type="button">복사</button><pre><code>python -m bench.sim.learning.run collect-handoffs \
+  --task cook_broccolini --output outputs/local_skills/pilot \
+  --pick-checkpoint outputs/local_skills/pilot/runs/pick/teacher.pt
+python -m bench.sim.learning.run train-teacher \
+  --skill place_on --output outputs/local_skills/pilot \
+  --steps 5000 --human-port 8766
+python -m bench.sim.learning.run evaluate \
+  --skill place_on --task cook_broccolini --split validation \
+  --episodes 20 --output outputs/local_skills/pilot \
+  --pick-checkpoint outputs/local_skills/pilot/runs/pick/teacher.pt</code></pre></div>
+<p>첫 place 학습 예시에서는 BC를 생략했습니다. 새 시작 상태에서도 원본 데모가 성공하는 경우에만 pick과 같은 방식으로 검증한 offline replay를 사용합니다.</p>
+<div class="box gate"><strong>다음 단계로 넘어갈 조건</strong><p>물체가 올바른 지지면에 놓이고, 그리퍼를 연 뒤 손이 후퇴해도 놓인 상태가 유지돼야 합니다. Pick 실패와 place 준비 실패도 전체 평가의 분모에 포함합니다.</p></div></article>
+
+<article class="step" id="step-5"><span class="step-number">06 / FIVE TASKS</span><h2>연결이 확인되면 다섯 태스크의 두 teacher로 확장합니다.</h2><p class="summary">태스크마다 모델을 새로 만드는 구조가 아닙니다. 다섯 태스크의 데이터를 섞어 pick 하나와 place_on 하나를 학습합니다.</p>
+<div class="table-scroll"><table><thead><tr><th>대상 태스크</th><th>공유 모델</th></tr></thead><tbody><tr><td>halve_an_egg</td><td rowspan="5">pick teacher 1개<br>place_on teacher 1개</td></tr><tr><td>store_honey</td></tr><tr><td>cook_broccolini</td></tr><tr><td>make_rose_centerpieces</td></tr><tr><td>picking_up_trash</td></tr></tbody></table></div>
+<h3>새 실험 경로에서 데이터를 늘립니다.</h3><div class="code-wrap"><button class="copy" type="button">복사</button><pre><code>python -m bench.sim.learning.run prepare-data \
+  --output outputs/local_skills/full
+python -m bench.sim.learning.run collect-handoffs \
+  --output outputs/local_skills/full</code></pre></div>
+<p>기본 설정은 태스크당 train 160 / validation 20 / test 20 instance입니다. 데이터·물리 rollout 비용이 크면 <span class="file">--instances</span>로 작은 집합부터 늘립니다. Handoff 수집에서 <span class="file">--task</span>를 빼면 다섯 태스크를 대상으로 처리합니다.</p>
+<div class="box"><strong>Full 실험도 같은 순서입니다.</strong><p>Pick teacher 학습 → 무개입 validation → <span class="file">--pick-checkpoint</span>로 place handoff 수집 → place teacher 학습 → 무개입 validation. 앞 단계 명령의 <span class="file">--output</span>과 checkpoint 경로를 <span class="file">outputs/local_skills/full</span> 기준으로 맞춥니다. 새 output에서는 teacher가 새로 초기화되며 pilot 가중치가 자동으로 이어지지는 않습니다.</p></div>
+<div class="box attention"><strong>평가는 태스크별로도 봅니다.</strong><p>전체 평균만 높고 특정 물체나 지지면에서 반복 실패할 수 있습니다. 각 태스크의 준비 성공률, 무개입 조작 성공률과 거절 원인을 비교하고 시작 상태 분포를 보완합니다.</p></div>
+<div class="box gate"><strong>다음 단계로 넘어갈 조건</strong><p>두 teacher가 여러 원본 instance와 코드 handoff 상태에서 검증돼야 합니다. Student가 모방할 만큼 신뢰할 수 있는 성공 rollout을 확보합니다. 마지막 test split은 반복 튜닝에 사용하지 않습니다.</p></div></article>
+
+<article class="step" id="step-6"><span class="step-number">07 / STUDENT</span><h2>Teacher 행동을 영상 student로 옮기고 DAgger로 보완합니다.</h2><p class="summary">Student는 RGB·로봇 상태·목표·짧은 관측 이력으로 행동합니다. Teacher의 정확한 물체 위치는 student 입력으로 전달하지 않습니다.</p>
+<div class="mini" aria-label="Distillation과 DAgger"><div class="oracle"><b>Teacher rollout</b>정답 상태로 행동 생성</div><div class="sensor"><b>학습 쌍</b>센서 관측 ↔ teacher 행동</div><div><b>Visual BC</b>CNN + GRU student</div><div><b>DAgger 반복</b>학생 방문 상태에서 teacher 질의</div></div>
+<h3>검증된 full teacher로 두 student를 학습합니다.</h3><div class="code-wrap"><button class="copy" type="button">복사</button><pre><code>for learning_skill in pick place_on; do
+  python -m bench.sim.learning.run collect-distillation \
+    --skill "$learning_skill" --split train --episodes 50 \
+    --output outputs/local_skills/full
+  python -m bench.sim.learning.run collect-distillation \
+    --skill "$learning_skill" --split validation --episodes 20 \
+    --output outputs/local_skills/full
+  python -m bench.sim.learning.run train-student \
+    --skill "$learning_skill" --output outputs/local_skills/full
+  python -m bench.sim.learning.run dagger \
+    --skill "$learning_skill" --split train --episodes 50 \
+    --output outputs/local_skills/full
+  python -m bench.sim.learning.run train-student \
+    --skill "$learning_skill" --output outputs/local_skills/full
+done</code></pre></div>
+<p>50 / 20 episodes는 첫 수집 배치의 예시이며 충분한 데이터량을 의미하지 않습니다. 태스크·물체·시작 오차별 성공 궤적을 확인하면서 늘립니다. Train과 validation은 원본 episode 단위로 분리합니다.</p>
+<div class="box"><strong>DAgger에서 무엇이 달라지나요?</strong><p>Teacher가 만든 상태만 모방하면 student가 조금 틀렸을 때의 관측이 부족합니다. DAgger에서는 student를 직접 움직이고, student가 방문한 상태의 정답을 teacher에게만 주어 추가 행동 label을 얻습니다.</p></div>
+<div class="box gate"><strong>다음 단계로 넘어갈 조건</strong><p><span class="file">outputs/local_skills/full/deploy/v1/</span>에 <span class="file">manifest.json</span>, <span class="file">pick.pt</span>, <span class="file">place_on.pt</span>가 생성되고, validation에서 실제 student rollout을 평가할 수 있어야 합니다. 모방 loss 감소만으로 조작 성공을 판단하지 않습니다.</p></div></article>
+
+<article class="step" id="step-7"><span class="step-number">08 / EVALUATION & DEPLOYMENT</span><h2>Student를 무개입으로 평가한 뒤 실로봇 연결을 진행합니다.</h2><p class="summary">마지막 평가도 처음과 같은 센서 기반 코드 정렬을 사용합니다. Teacher의 정확한 위치나 사람 교정 없이 두 student가 동작하는지 확인합니다.</p>
+<div class="code-wrap"><button class="copy" type="button">복사</button><pre><code>python -m bench.sim.learning.run evaluate \
+  --skill pick --split test --episodes 50 \
+  --output outputs/local_skills/full \
+  --bundle outputs/local_skills/full/deploy/v1
+python -m bench.sim.learning.run evaluate \
+  --skill place_on --split test --episodes 50 \
+  --output outputs/local_skills/full \
+  --bundle outputs/local_skills/full/deploy/v1</code></pre></div>
+<p>Bundle에 두 모델이 있으면 place 평가는 <b>student pick부터</b> 실행합니다. Teacher pick으로 파지를 대신해 주는 평가와 구분할 수 있습니다.</p>
+<div class="table-scroll"><table><thead><tr><th>볼 지표</th><th>의미</th></tr></thead><tbody><tr><td>Preparation pass rate</td><td>센서 기반 준비 조건을 통과하는 비율</td></tr><tr><td>Autonomous success rate</td><td>사람 개입 없이 실제 파지/놓기와 마무리를 성공한 비율</td></tr><tr><td>Sensor false accept / reject</td><td>실행기의 성공 판단과 정답 평가가 불일치하는 횟수</td></tr><tr><td>태스크별 실패 원인</td><td>인식·접근·정밀 동작·후퇴 중 어느 부분이 실패하는지</td></tr></tbody></table></div>
+<div class="box attention"><strong>이 평가는 pick/place_on skill 단위입니다.</strong><p>다섯 BEHAVIOR 태스크 전체 완주를 보장하는 평가가 아닙니다. 전체 태스크에는 다른 skill과 상위 planner 연결이 추가로 필요합니다.</p></div>
+<h3>실로봇에 연결할 때 남는 작업</h3><ul><li><span class="file">RobotPort</span>에 R1Pro SDK 기반 센서·관절 명령·FK·motion guard를 연결합니다. 현재 제공된 backend는 OmniGibson입니다.</li><li>실제 camera/TCP 좌표계와 RGB-D·proprio 시간 정렬을 보정합니다.</li><li>같은 code handoff 분포가 만들어지는지 검증한 뒤 student bundle을 연결합니다.</li><li>Base·torso·반대 팔 hold와 전신 충돌·안전 controller를 실제 하드웨어에서 확인합니다.</li></ul>
+<div class="box gate"><strong>이번 실험의 완료 기준</strong><p>환경·데이터·handoff 검증을 통과하고, 두 teacher와 두 student에 대해 무개입 skill 성능을 측정한 상태입니다. 실로봇 SDK 연결과 전체 task 통합은 별도 후속 작업입니다.</p></div></article>
+</div>
+<aside class="aside"><h2>코드는 어디서 실행하나요?</h2><p class="file">/home/yoonsihyung/workspace/behavior-1k</p><p>모든 학습 명령은 이 폴더에서 실행합니다. 저장소를 한 단계 더 들어갈 필요가 없습니다.</p><ul><li><span class="file">skills/learned/</span><br>관측 · 코드 정렬 · policy · 실행기</li><li><span class="file">bench/sim/learning/</span><br>환경 · 데이터 · teacher · student · CLI</li><li><span class="file">outputs/local_skills/</span><br>handoff · replay · checkpoint · 평가 결과</li></ul><details><summary>현재 검증 범위</summary><p>핵심 테스트 24개와 import 경계 검사 6개 통과. GPU 학습 업데이트·모델 저장/추론·HIL transport를 확인했습니다. 실제 BEHAVIOR physics 성공률과 학습 시간은 아직 측정하지 않았습니다.</p><p class="tag">현재 페이지는 2026-10-10 검사 결과를 기록한 정적 설명입니다. 실시간 학습 대시보드가 아닙니다.</p></details><details><summary>Policy가 움직이는 부위</summary><p>선택한 팔의 관절 7개와 그리퍼만 학습합니다. Code prepare가 base·torso·팔을 정렬하고, local policy 동안 base·torso·반대 팔은 유지합니다.</p></details><details><summary>BC와 HIL을 어떻게 고르나요?</summary><p>성공을 검증한 데모가 있으면 BC 초기화가 가능합니다. 없으면 생략합니다. 두 경우 모두 첫 online RL rollout부터 사람이 필요할 때 개입할 수 있습니다.</p></details></aside>
+</div>
+</main><footer>명령은 현재 <span class="file">bench/sim/learning/run.py</span>의 CLI에 맞춘 예시입니다. 이 페이지에서 명령을 복사하거나 단계를 눌러도 실제 설치·학습이 시작되지는 않습니다.</footer>
+<script>
+"use strict";
+(function(){
+const panels=Array.from(document.querySelectorAll('.step'));
+const buttons=Array.from(document.querySelectorAll('[data-step]'));
+function show(index,scroll){
+ panels.forEach((panel,i)=>panel.hidden=i!==index);
+ buttons.forEach((button,i)=>button.setAttribute('aria-pressed',String(i===index)));
+ if(scroll)panels[index].scrollIntoView({block:'start',behavior:'smooth'});
+}
+panels.forEach((panel,i)=>{
+ const pager=document.createElement('div');pager.className='pager';
+ const previous=document.createElement('button');previous.type='button';previous.textContent='이전 단계';previous.disabled=i===0;previous.onclick=()=>show(i-1,true);
+ const next=document.createElement('button');next.type='button';next.className='next';next.textContent=i===panels.length-1?'처음으로':'다음 단계';next.onclick=()=>show(i===panels.length-1?0:i+1,true);
+ pager.append(previous,next);panel.append(pager);
+});
+buttons.forEach(button=>button.addEventListener('click',()=>show(Number(button.dataset.step),true)));
+document.querySelectorAll('.copy').forEach(button=>button.addEventListener('click',async()=>{
+ const code=button.parentElement.querySelector('code').textContent;
+ try{await navigator.clipboard.writeText(code);button.textContent='복사됨';setTimeout(()=>button.textContent='복사',1500);}
+ catch(e){button.textContent='코드를 선택해 복사하세요';}
+}));
+show(0,false);
+})();
+</script>
+</body></html>
