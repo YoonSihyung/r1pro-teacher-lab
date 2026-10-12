@@ -2,19 +2,19 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>R1Pro Teacher Lab · 몸통부터 학습 시간까지</title>
+<title>R1Pro Teacher Lab · 자율 학습 전체 구조</title>
 <meta name="description" content="BEHAVIOR-1K에서 pick·place_on teacher를 학습하기 위한 로봇 구조, Gaussian actor 코드, 객체 표현과 시간 계산.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2310192d'/%3E%3Cpath d='M6 23Q16 0 26 23' fill='none' stroke='%2356d9c3' stroke-width='3'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="style.css"><script src="app.js" defer></script>
 <link rel="stylesheet" href="hil.css"></head>
 <body>
-<header class="top"><a class="brand" href="#intro"><span class="mark">R1</span> TEACHER LAB</a><span class="top-note">BEHAVIOR-1K / 연구 가이드</span><a href="#sources" class="sources-link">근거 보기</a></header><div class="historical-plan"><strong>최신 계획: R1Pro + HIL-SERL</strong><p>지정 저장소의 2026 데이터·BEHAVIOR 3.9.3 기준으로 계획을 갱신했습니다. <a href="hil.html">사람 개입을 포함한 전체 학습 그림 보기 →</a></p><p>이 페이지의 이전 PPO·2025 데이터 설명은 당시의 비교안입니다. 최신 실행 기준과 학습 순서는 HIL 페이지를 따릅니다.</p></div>
-<main><section style="padding:20px 24px;margin:0 0 24px;background:#fff1df;border:1px solid #efcfac;border-radius:8px;font-size:16px;line-height:1.7"><strong>2026-10-10 · 구현 후의 실행 순서</strong><p style="margin:8px 0 0">현재 환경 확인부터 handoff 검증, pick/place teacher와 HIL, student 학습까지 다음 할 일을 정리했습니다. <a href="next.html">다음 실행 순서 보기</a></p></section>
+<header class="top"><a class="brand" href="#intro"><span class="mark">R1</span> TEACHER LAB</a><span class="top-note">BEHAVIOR-1K / 연구 가이드</span><a href="#sources" class="sources-link">근거 보기</a></header><div class="historical-plan"><strong>최신 계획: R1Pro 자율 학습 구조</strong><p>BC → SGS-guided SAC/RLPD → visual student. <a href="https://yoonsihyung.github.io/r1pro-teacher-lab/architecture/">현재 전체 구조와 파일별 알고리즘 그림 보기 →</a></p><p>아래의 이전 HIL·PPO 비교 설명은 과거안입니다. 현재 실행 기준은 전체 구조 페이지를 따릅니다.</p></div>
+<main><section style="margin:0;padding:17px 24px;background:#e7f7f3;border-bottom:1px solid #b7e0d6;color:#174b42;font:13px/1.85 sans-serif;margin-bottom:24px;border-radius:8px"><strong>2026-10-12 · 전체 구조 갱신</strong><p>현재 코드와 추천 통합 policy를 구분한 네 장의 그림을 만들었습니다. <a href="https://yoonsihyung.github.io/r1pro-teacher-lab/architecture/">학습 · 모델 · 실행 · 통합안 보기</a></p></section>
 <section id="intro" class="intro">
-<div><p class="eyebrow">PRIVILEGED STATE → TEACHER → STUDENT</p><h1>pick과 place_on,<br><span>teacher부터 이해하기.</span></h1><p class="lead">다섯 태스크의 skill 구간을 묶어 두 정책을 학습합니다.<br>현재 teacher 계획은 상태 기반 Gaussian actor와 SAC/RLPD + 사람 교정입니다.</p></div>
+<div><p class="eyebrow">PRIVILEGED STATE → TEACHER → STUDENT</p><h1>pick과 place_on,<br><span>teacher부터 이해하기.</span></h1><p class="lead">다섯 태스크의 skill 구간을 묶어 두 정책을 학습합니다.<br>현재 teacher는 상태 기반 Gaussian actor와 SAC/RLPD로 자율 학습합니다.</p></div>
 <div class="scope"><span class="pill">학습 범위</span><strong>5 tasks · 2 policies</strong><p>halve_an_egg · store_honey · cook_broccolini<br>make_rose_centerpieces · picking_up_trash</p><div class="policy-pills"><span>π<sub>pick</sub></span><span>π<sub>place_on</sub></span></div><p class="small">전체 태스크 완주가 아닌 pick·place_on skill 학습입니다. 태스크마다 정책을 하나씩 만드는 구성과 다릅니다.</p></div>
 </section>
-<div class="note"><strong>전체 학습 Pipeline</strong><p>원본 데모 → 선택적 BC → 사람 개입 RL → 무개입 평가 → 영상 student distillation. <a href="hil.html">최신 전체 그림과 실행 계획 보기</a></p></div>
+<div class="note"><strong>전체 학습 Pipeline</strong><p>원본 데모 → 검증된 replay로 BC → SGS-guided 자율 RL → student distillation → 고정 분포 평가. <a href="https://yoonsihyung.github.io/r1pro-teacher-lab/architecture/">현재 전체 구조 보기</a></p></div>
 <div class="new-guide-note"><strong>접근은 코드, 정밀 조작은 RL로 좁히는 설계</strong><p>코드가 RL에 넘기는 상태가 낯설지 않게 학습·시작 조건·controller를 맞춥니다. <a href="handoff.html">논문 5편과 전환 상태 그림 보기 →</a></p></div><div class="note"><strong>현재 설계: 전신 상태 + Visual Student</strong><p>Base·torso·양팔의 시작 상태와 센서 추정 오차를 함께 다룹니다. 접근·gate·종료 검사까지 정답 위치 없이 실행하고 teacher부터 같은 경로로 학습합니다. <a href="student-framework.html">Student 포함 정보 흐름·학습 순서 보기 →</a></p></div><nav class="chapter-nav" aria-label="질문별 이동"><a href="design.html"><b>설계</b> 파일별 역할</a><a href="#torso"><b>01</b> Torso</a><a href="#actor"><b>02</b> Gaussian 코드</a><a href="#encoder"><b>03</b> 46차원과 객체</a><a href="#time"><b>04</b> GPU와 학습 시간</a></nav>
 <div class="note"><strong>라벨 · 시작 snapshot · 성공 조건</strong><p>BC와 RL에서 어떤 데이터를 사용하는지, place_on 상태 그림으로 살펴보세요. <a href="skills.html#explorer">그림과 자세한 설명 보기</a></p></div>
 
