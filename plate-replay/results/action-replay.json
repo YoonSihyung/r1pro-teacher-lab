@@ -1,0 +1,88 @@
+{
+  "status": "complete",
+  "episode": 960410,
+  "split": "train",
+  "mode": "original_native_actions_unassisted",
+  "training_started": false,
+  "bc_actor_used": false,
+  "updated_unix": 1792858990.6707733,
+  "source_start": 720,
+  "source_end_exclusive": 1110,
+  "source_grasping_mode": "assisted",
+  "assistance": {
+    "assistance_disabled": true,
+    "active_assisted_constraint_arms": []
+  },
+  "required_contents": [
+    "broccolini_78",
+    "broccolini_79",
+    "broccolini_80",
+    "garlic_clove_75",
+    "garlic_clove_76"
+  ],
+  "state_restorations": 1,
+  "recorded_action_dimension": 23,
+  "step": 390,
+  "total_steps": 390,
+  "verification_steps": 0,
+  "video_fps": 30,
+  "video_roles": [
+    "head",
+    "left_wrist"
+  ],
+  "video_state_timing": "before source action",
+  "latest": {
+    "step": 360,
+    "source_frame": 1079,
+    "phase": "original_actions",
+    "height": 0.15921443700790405,
+    "tilt_deg": 10.22842337960251,
+    "held": true,
+    "contacts": [
+      true,
+      true
+    ],
+    "width": 0.006188578903675079,
+    "retained": [
+      "broccolini_79",
+      "broccolini_80",
+      "garlic_clove_75",
+      "garlic_clove_76"
+    ],
+    "contents_preserved": false,
+    "clear": true
+  },
+  "assistance_end": {
+    "assistance_disabled": true,
+    "active_assisted_constraint_arms": []
+  },
+  "basic_pick_success": true,
+  "level_pick_success": false,
+  "any_sustained_basic_pick": true,
+  "any_sustained_level_pick": false,
+  "ever_physically_held": true,
+  "max_held_height_cm": 16.02427363395691,
+  "max_height_cm": 16.02427363395691,
+  "max_tilt_deg": 15.329442205996676,
+  "final": {
+    "step": 390,
+    "source_frame": 1109,
+    "phase": "original_actions",
+    "height": 0.15494543313980103,
+    "tilt_deg": 9.82212796326845,
+    "held": true,
+    "contacts": [
+      true,
+      true
+    ],
+    "width": 0.00608523003757,
+    "retained": [
+      "broccolini_79",
+      "broccolini_80",
+      "garlic_clove_75",
+      "garlic_clove_76"
+    ],
+    "contents_preserved": false,
+    "clear": true
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "status": "complete",
+  "episode": 960410,
+  "split": "train",
+  "mode": "recorded_robot_state_free_objects",
+  "training_started": false,
+  "bc_actor_used": false,
+  "updated_unix": 1792860038.9045606,
+  "source_start": 720,
+  "source_end_exclusive": 1110,
+  "source_grasping_mode": "assisted",
+  "assistance": {
+    "assistance_disabled": true,
+    "active_assisted_constraint_arms": []
+  },
+  "required_contents": [
+    "broccolini_78",
+    "broccolini_79",
+    "broccolini_80",
+    "garlic_clove_75",
+    "garlic_clove_76"
+  ],
+  "state_restorations": 1,
+  "recorded_action_dimension": 23,
+  "step": 390,
+  "total_steps": 390,
+  "verification_steps": 0,
+  "video_fps": 30,
+  "video_roles": [
+    "head",
+    "left_wrist"
+  ],
+  "video_state_timing": "before source action",
+  "recorded_robot_pose_forced_each_frame": true,
+  "object_states_restored_after_initialization": false,
+  "actuator_tracking_evaluation": false,
+  "latest": {
+    "step": 360,
+    "source_frame": 1079,
+    "phase": "original_actions",
+    "height": 0.09541136026382446,
+    "tilt_deg": 31.69454688193281,
+    "held": true,
+    "contacts": [
+      true,
+      true
+    ],
+    "width": 0.007992357015609741,
+    "retained": [
+      "broccolini_79",
+      "broccolini_80",
+      "garlic_clove_76"
+    ],
+    "contents_preserved": false,
+    "clear": true
+  },
+  "assistance_end": {
+    "assistance_disabled": true,
+    "active_assisted_constraint_arms": []
+  },
+  "basic_pick_success": false,
+  "level_pick_success": false,
+  "any_sustained_basic_pick": true,
+  "any_sustained_level_pick": false,
+  "ever_physically_held": true,
+  "max_held_height_cm": 13.104397058486938,
+  "max_height_cm": 13.104397058486938,
+  "max_tilt_deg": 39.38877536469543,
+  "final": {
+    "step": 390,
+    "source_frame": 1109,
+    "phase": "original_actions",
+    "height": 0.0,
+    "tilt_deg": 0.0008939621641131164,
+    "held": false,
+    "contacts": [
+      false,
+      false
+    ],
+    "width": 0.0011981568532064557,
+    "retained": [
+      "broccolini_80",
+      "garlic_clove_76"
+    ],
+    "contents_preserved": false,
+    "clear": false
+  },
+  "robot_frames_restored": 390,
+  "max_recorded_joint_error_rad": 0.0,
+  "max_recorded_root_position_error_m": 0.0,
+  "max_recorded_root_quaternion_error": 0.0,
+  "interpretation": "frame-wise forced robot pose, physical free objects; not actuator tracking or learned-policy success"
+}
