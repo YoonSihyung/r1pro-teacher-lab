@@ -1,0 +1,72 @@
+{
+  "created_unix": 1792991623.3047874,
+  "scope": "outputs/local_skills/whole_body23",
+  "roles": [
+    {
+      "role": "current",
+      "path": "outputs/local_skills/whole_body23/plate-visual-review-v1/round-012/teacher.pt",
+      "sha256": "0bfc6643213a60c6c1ce48281ad096c2ce6f080487de9b8ca37026f8f3756deb",
+      "bytes": 13082336,
+      "evidence": {
+        "steps": 6000,
+        "successes": 2,
+        "trials": 3,
+        "note": "最新 restrained-motion teacher; two successful5second hold audits, not completed mastery"
+      }
+    },
+    {
+      "role": "success-1",
+      "path": "outputs/local_skills/whole_body23/plate-visual-review-v1/round-010/evaluation-step0006000/teacher-evaluated.pt",
+      "sha256": "e930dad384280061d3e2ed9bd749049ccad8dac2f83a0fecb5a9dab24200fc1c",
+      "bytes": 13082208,
+      "evidence": {
+        "steps": 6000,
+        "successes": 3,
+        "trials": 3,
+        "note": "Coarse success baseline; abrupt lift, raw-native audit2/3"
+      }
+    },
+    {
+      "role": "success-2",
+      "path": "outputs/local_skills/whole_body23/plate-visual-review-v1/round-012/evaluation-step0003000/teacher-evaluated.pt",
+      "sha256": "eaf7e15fd375dae11bb48a779b0214ea11b41500f5bfc3bbecfc7bdbf8da8e10",
+      "bytes": 13082336,
+      "evidence": {
+        "steps": 3000,
+        "successes": 1,
+        "trials": 3,
+        "note": "Clean successful case with additional5second hold; remaining starts fail"
+      }
+    },
+    {
+      "role": "failure-1",
+      "path": "outputs/local_skills/whole_body23/plate-original-left12-bc-v1/bc-best.pt",
+      "sha256": "6536aaad41a432d4d18c9102504c9a0fff86a4fb9fe92ef90fd6c62adeb56781",
+      "bytes": 8130551,
+      "evidence": {
+        "bc_updates": 250,
+        "successes": 0,
+        "trials": 2,
+        "note": "Original BC initializer; failed physical tests in train960030 and validation961600. Required to resume current PPO."
+      }
+    },
+    {
+      "role": "failure-2",
+      "path": "outputs/local_skills/whole_body23/plate-visual-review-v1/round-009/evaluation-step0006000/teacher-evaluated.pt",
+      "sha256": "1903f22fda6bd2c6b2f2eeaea732db8c93dada1dad69767f4cf042713742bff0",
+      "bytes": 13082272,
+      "evidence": {
+        "steps": 6000,
+        "successes": 0,
+        "trials": 3,
+        "note": "PPO regression; plate rocking and lowering"
+      }
+    }
+  ],
+  "preserved_data": "Original datasets, runtime installations and plate BC manifest/41processed episode windows are retained.",
+  "current_resume": "Full optimizer/critic/normalizers retained. Initial-actor byte copy is redundant; identical source remains in success-1. Runtime and BC manifest paths remain valid.",
+  "delete_count": 5713,
+  "delete_bytes": 5094714082,
+  "completed_unix": 1792991623.582728,
+  "remaining_model_files": 5
+}
