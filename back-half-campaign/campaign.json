@@ -17,7 +17,7 @@
     "demo_revision": "4f50b44796641a4d526a19d9aeadc8aa51e2f2c2",
     "raw_revision": "f9d2901112993d75684223820eec70722806c2c4"
   },
-  "stage": "inventory_ready",
+  "stage": "supported_code_pilots_finished",
   "tasks": [
     {
       "task_index": 50,
@@ -2409,7 +2409,7 @@
           ]
         }
       ],
-      "status": "code_audit_pending",
+      "status": "expand_code_audit",
       "code_successes": null,
       "code_trials": 0,
       "teacher_successes": null,
@@ -2419,7 +2419,23 @@
       "pilot_adapters": [
         "rose"
       ],
-      "pilot": null,
+      "pilot": {
+        "kind": "rose",
+        "status": "complete",
+        "scope": "privileged single-episode contact pilot",
+        "successes": 2,
+        "trials": 7,
+        "breakdown": {
+          "full_approach_pilot": {
+            "successes": 0,
+            "trials": 1
+          },
+          "same_episode_contact_pilot": {
+            "successes": 2,
+            "trials": 6
+          }
+        }
+      },
       "observed_skill_ids": [
         1,
         2,
@@ -10500,7 +10516,7 @@
           ]
         }
       ],
-      "status": "code_pilot_running",
+      "status": "expand_code_audit",
       "code_successes": null,
       "code_trials": 0,
       "teacher_successes": null,
@@ -10512,8 +10528,20 @@
       ],
       "pilot": {
         "kind": "drawer",
-        "status": "running",
-        "scope": "privileged single-episode contact pilot"
+        "status": "complete",
+        "scope": "privileged single-episode contact pilot",
+        "successes": 1,
+        "trials": 7,
+        "breakdown": {
+          "full_approach_pilot": {
+            "successes": 0,
+            "trials": 1
+          },
+          "same_episode_contact_pilot": {
+            "successes": 1,
+            "trials": 6
+          }
+        }
       },
       "observed_skill_ids": [
         1,
@@ -15399,5 +15427,5 @@
     "student_training": false
   },
   "note": "Published page is a timestamped snapshot, not a live remote training monitor.",
-  "updated_unix": 1792991990.2831752
+  "updated_unix": 1792993491.4410613
 }
